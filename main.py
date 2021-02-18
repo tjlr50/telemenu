@@ -45,7 +45,7 @@ app.secret_key = SECRET_KEY
 @app.route('/user/login', methods=['GET', 'POST'])
 def user_login():
     if request.method == "GET":
-        return render_template('user_login.html')
+        return render_template('user/login.html')
     else:
         try:
             email, password = request.form['email'], request.form['password']
@@ -55,15 +55,15 @@ def user_login():
                 session['user'] = user.email
                 return redirect('/')
             else:
-                return render_template('user_login.html', wrong_pass=True)
+                return render_template('user/login.html', wrong_pass=True)
         except User.DoesNotExist:
-            return render_template('user_login.html', no_user=True)
+            return render_template('user/login.html', no_user=True)
 
 
 @app.route('/user/logup', methods=['GET', 'POST'])
 def user_logup():
     if request.method == "GET":
-        return render_template('user_logup.html')
+        return render_template('user/logup.html')
     else:
         try:
             password = request.form['password']
@@ -72,9 +72,9 @@ def user_logup():
             User(email=request.form['email'], full_name=request.form['full_name'], password=password.decode('utf-8')).save(
                 force_insert=True)
         except ValidationError as ve:
-            return render_template('user_logup.html', email_error="Formato de correo Incorrecto")
+            return render_template('user/logup.html', email_error="Formato de correo Incorrecto")
         except pymongo.errors.DuplicateKeyError:
-            return render_template('user_logup.html', email_error="Ya existe un usuario con ese correo")
+            return render_template('user/logup.html', email_error="Ya existe un usuario con ese correo")
     return redirect('/user/login')
 
 
@@ -103,7 +103,7 @@ def dashboard():
 @app.route('/restaurant/login', methods=['GET', 'POST'])
 def restaurant_login():
     if request.method == "GET":
-        return render_template('restaurant_login.html')
+        return render_template('restaurant/login.html')
     else:
         try:
             email, password = request.form['email'], request.form['password']
@@ -113,15 +113,15 @@ def restaurant_login():
                 session['restaurant'] = restaurant.email
                 return redirect('/')
             else:
-                return render_template('restaurant_login.html', wrong_pass=True)
+                return render_template('restaurant/login.html', wrong_pass=True)
         except User.DoesNotExist:
-            return render_template('restaurant_login.html', no_restaurant=True)
+            return render_template('restaurant/login.html', no_restaurant=True)
 
 
 @app.route('/restaurant/logup')
 def restaurant_logup():
     if request.method == "GET":
-        return render_template('restaurant_logup.html')
+        return render_template('restaurant/logup.html')
     else:
         try:
             password = request.form['password']
@@ -130,9 +130,9 @@ def restaurant_logup():
             Restaurant(email=request.form['email'], name=request.form['restaurant_name'], password=password.decode('utf-8')).save(
                 force_insert=True)
         except ValidationError as ve:
-            return render_template('restaurant_logup.html', email_error="Formato de correo Incorrecto")
+            return render_template('restaurant/logup.html', email_error="Formato de correo Incorrecto")
         except pymongo.errors.DuplicateKeyError:
-            return render_template('restaurant_logup.html', email_error="Ya existe un restaurante con ese correo")
+            return render_template('restaurant/logup.html', email_error="Ya existe un restaurante con ese correo")
     return redirect('/restaurant/login')
 
 
