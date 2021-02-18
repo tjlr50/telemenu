@@ -22,7 +22,6 @@ class Menu(EmbeddedMongoModel):
     price = fields.FloatField(required=True)
     valid_date = fields.DateTimeField(required=True)
     photo_url = fields.CharField(required=True, blank=False)
-    pass
 
 
 class Order(MongoModel):
@@ -33,7 +32,6 @@ class Order(MongoModel):
     menu = fields.ReferenceField(Menu, required=True)
     # Manejar estado mediante logica de la aplicación
     state = fields.CharField(required=True, blank=False)
-    pass
 
 
 class Restaurant(MongoModel):
@@ -42,6 +40,6 @@ class Restaurant(MongoModel):
     # Contraseña de acceso
     # Menus
     email = fields.EmailField(primary_key=True, required=True)
-    full_name = fields.CharField(required=True, blank=False)
+    name = fields.CharField(required=True, blank=False)
     password = fields.CharField(required=True)
     menus = fields.EmbeddedDocumentListField(Menu, default=[])

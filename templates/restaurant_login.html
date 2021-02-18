@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Iniciar Sesión Restaurante{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h2 class="display-2 font-weight-bold my-4">¡Administra tu restaurante!</h2>
+    <h4 class="display-4 m-0">Con Telemenú</h4>
+    <form action="/login" method="post">
+        {% if no_restaurant %}
+        <span class="text-danger">No existe un restaurante registrado con ese correo</span>
+        <input name="email" type="email" class="form-control is-invalid mb-2" required placeholder="Correo">
+        {%else%}
+        <input name="email" type="email" class="form-control mb-2" placeholder="Correo" required>
+        {% endif %}
+
+        {% if wrong_pass %}
+        <span class="text-danger">Contraseña Incorrecta</span>
+        <input name="password" type="password" class="form-control is-invalid mb-2" placeholder="Contraseña" required>
+        {%else%}
+        <input name="password" type="password" class="form-control mb-2" placeholder="Contraseña" required>
+        {% endif %}
+
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Iniciar</button>
+        </div>
+        <a href="/restaurant/login">
+            <span class="float-end text-dark text-mute">Para usuarios</span>
+        </a>
+        <br>
+        <a href="/user/logup">
+            <span class="float-end text-dark text-mute">Registrate ahora</span>
+        </a>
+
+    </form>
+</div>
+{%endblock%}

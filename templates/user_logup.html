@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Registro Usuarios{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h4 class="display-4 m-0 mt-4">Registrate a Telemenú</h4>
+    <form action="/user/logup" method="post">
+        <input name="full_name" type="text" class="form-control mb-2" required placeholder="Nombre Completo">
+        {% if email_error %}
+        <span class="text-danger">{{email_error}}</span>
+        <input name="email" type="email" class="form-control is-invalid mb-2" required placeholder="Correo">
+        {% else%}
+        <input name="email" type="email" class="form-control mb-2" required placeholder="Correo">
+        {% endif %}
+        <input name="password" type="password" class="form-control mb-2" required minlength="6"
+            placeholder="Contraseña">
+        <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit">Registrate</button>
+        </div>
+        <a href="/restaurant/logup">
+            <span class="float-end text-dark text-mute">Para restaurantes</span>
+        </a>
+        <br>
+        <a href="/user/login">
+            <span class="float-end text-dark text-mute">Inicia Sesión</span>
+        </a>
+
+    </form>
+</div>
+{%endblock%}

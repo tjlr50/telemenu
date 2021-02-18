@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+    {% if restaurants %}
+        {%for restaurant in restaurants%}
+            <code>
+                {{restaurant}}
+            </code>
+        {% endfor %}
+    {% else %}
+        <h1>Todavía no hay restaurantes</h1>
+    {% endif %}
+{% endblock %}
