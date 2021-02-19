@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Eliminando Menú{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h4 class="display-4 m-0 my-4">Eliminando menú</h4>
+    <div class="card p-1">
+        <div class="card-body">
+            {% if menu %}
+            <form action="/menus/delete/{{menu._id}}" method="post" enctype="multipart/form-data">
+                <h4>¿Estas seguro que deseas eliminar el menú con esta composicion?</h4>
+                {% if error %}
+                <span class="text-danger">Ocurrió un error tratando de eliminar el menú</span>
+                <div class="mb-3">
+                    <label for="composicionInput" class="form-label">Composición</label>
+                    <textarea name="composition" maxlength="255" class="form-control is-invalid" id="composicionInput"
+                        required rows="3" disabled>{{menu.composition}}</textarea>
+                </div>
+                {% else %}
+                <div class="mb-3">
+                    <label for="composicionInput" class="form-label">Composición</label>
+                    <textarea name="composition" maxlength="255" class="form-control" id="composicionInput" required
+                        rows="3">{{menu.composition}}</textarea>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2">
+                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                </div>
+            </form>
+            {% else %}
+            <h3 class="text-danger">El Menú ya no existe o no te pertenece</h3>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{%endblock%}

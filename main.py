@@ -1,7 +1,7 @@
 """
 Restaurantes a domicilio
 Oferta de menus
-~~~~ Gestion de Imagenes ~~~~ -> Cloudinary 
+~~~~ Gestion de Imagenes ~~~~ -> Cloudinary
 Usuario
 Restaurante -> Menu <-> Pedido <- Usuario
 Resturante crea menus
@@ -75,7 +75,7 @@ def restaurant_logged_in(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'restaurant' not in session:
-            return redirect('/restaurant/login/')
+            return redirect('/restaurant/login')
         return func(*args, **kwargs)
     return wrapper
 
@@ -202,10 +202,65 @@ def menus_create():
             print(e)
             restaurant.menus.pop()
             return render_template('menus/create.html', error=True)
-        return render_template('menus/index.html')
+        return redirect('/menus')
 
 
-@app.route('/')
+@app.route('/menus/edit/<id>', methods=['GET', 'POST'])
+@restaurant_logged_in
+def menus_edit(id):
+    restaurant = Restaurant.objects.get({'_id': session['restaurant']})
+    menu_and_idx = [(menu, idx) for idx, menu in enumerate(
+        restaurant.menus) if menu._id == ObjectId(id)]
+    menu = menu_and_idx[0][0] if menu_and_idx else None
+    idx = menu_and_idx[0][1] if menu_and_idx else None
+    if request.method == "GET":
+        return render_template('menus/edit.html', menu=menu)
+    else:
+        try:
+            if menu:
+                composition = request.form['composition']
+                price = float(request.form['price'])
+                valid_date = datetime.datetime.strptime(
+                    request.form['valid_date'], '%Y-%m-%d')
+                photo = request.files['photo']
+                photo_url = cloudinary.uploader.upload_image(photo).build_url()
+                menu.composition = composition
+                menu.price = price
+                menu.valid_date = valid_date
+                menu.photo_url = photo_url
+                restaurant.save()
+            else:
+                return render_template('menus/edit.html', menu=None)
+        except Exception as e:
+            print(e)
+            return render_template('menus/edit.html', menu=menu, error=True)
+        return redirect('/menus')
+
+
+@app.route('/menus/delete/<id>', methods=['GET', 'POST'])
+@restaurant_logged_in
+def menus_delete(id):
+    restaurant = Restaurant.objects.get({'_id': session['restaurant']})
+    menu_and_idx = [(menu, idx) for idx, menu in enumerate(
+        restaurant.menus) if menu._id == ObjectId(id)]
+    menu = menu_and_idx[0][0] if menu_and_idx else None
+    idx = menu_and_idx[0][1] if menu_and_idx else None
+    if request.method == "GET":
+        return render_template('menus/delete.html', menu=menu)
+    else:
+        try:
+            if menu:
+                restaurant.menus.remove(menu)
+                restaurant.save()
+            else:
+                return render_template('menus/delete.html', menu=None)
+        except Exception as e:
+            print(e)
+            return render_template('menus/delete.html', menu=menu, error=True)
+        return redirect('/menus')
+
+
+@ app.route('/')
 def index():
     orders = []
     if 'restaurant' in session:

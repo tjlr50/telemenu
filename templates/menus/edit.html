@@ -1,43 +1,50 @@
 {% extends "base.html" %}
-{% block title %}Registro Menú{% endblock title %}
+{% block title %}Edición Menú{% endblock title %}
 {%block body%}
 <div class="w-100 h-100 text-left p-0">
-    <h4 class="display-4 m-0 my-4">Registra un menú</h4>
+    <h4 class="display-4 m-0 my-4">Editando menú</h4>
     <div class="card p-1">
         <div class="card-body">
-            <form action="/menus/create" method="post" enctype="multipart/form-data">
+            {% if menu %}
+            <form action="/menus/edit/{{menu._id}}" method="post" enctype="multipart/form-data">
                 {% if error %}
-                <span class="text-danger">Ocurrió un error tratando de registrar el menú</span>
+                <span class="text-danger">Ocurrió un error tratando de editar el menú</span>
                 <div class="mb-3">
                     <label for="composicionInput" class="form-label">Composición</label>
                     <textarea name="composition" maxlength="255" class="form-control is-invalid" id="composicionInput"
-                        required rows="3"></textarea>
+                        required rows="3">{{menu.composition}}</textarea>
                 </div>
                 {% else %}
                 <div class="mb-3">
                     <label for="composicionInput" class="form-label">Composición</label>
                     <textarea name="composition" maxlength="255" class="form-control" id="composicionInput" required
-                        rows="3"></textarea>
+                        rows="3">{{menu.composition}}</textarea>
                 </div>
                 {% endif %}
                 <div class="mb-2">
                     <label for="priceInput" class="form-label">Precio</label>
                     <input name="price" step="0.1" min="0" max="100" type="number" class="form-control" id="priceInput"
-                        required>
+                        value={{menu.price}} required>
                 </div>
                 <div class="mb-2">
                     <label for="validDateInput" class="form-label">Valido hasta</label>
-                    <input name="valid_date" type="date" class="form-control" id="validDateInput" required>
+                    <input name="valid_date" type="date" class="form-control" id="validDateInput"
+                        value={{menu.valid_date}} required>
                 </div>
                 <div class="mb-3">
                     <label for="photoSelect" class="form-label">Selecciona una imagen</label>
                     <input name="photo" class="form-control" type="file" id="photoSelect" required>
                 </div>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="submit">Crear Menú</button>
+                    <button class="btn btn-primary" type="submit">Editar Menú</button>
                 </div>
             </form>
+            {% else %}
+            <h3 class="text-danger">El Menú ya no existe o no te pertenece</h3>
+            {% endif %}
+
         </div>
     </div>
+
 </div>
 {%endblock%}
