@@ -239,7 +239,7 @@ def menus():
 @restaurant_logged_in
 def menus_create():
     if request.method == "GET":
-        return render_template('menus/create.html')
+        return render_template('menus/create.html', today=datetime.datetime.now().strftime("%Y-%m-%d"))
     else:
         restaurant = Restaurant.objects.get({'_id': session['restaurant']})
         try:
@@ -256,7 +256,7 @@ def menus_create():
         except Exception as e:
             print(e)
             restaurant.menus.pop()
-            return render_template('menus/create.html', error=True)
+            return render_template('menus/create.html', error=True, today=datetime.datetime.now().strftime("%Y-%m-%d"))
         return redirect('/menus')
 
 
@@ -354,7 +354,7 @@ def index():
         for id in menus_ids:
             sub_orders = Order.objects.get_queryset().raw({'menu_id': id})
             orders.extend(sub_orders)
-    return render_template('index.html', restaurants=Restaurant.objects.all(), orders=orders)
+    return render_template('index.html', restaurants=list(Restaurant.objects.all()), orders=orders)
 
 
 def main():
