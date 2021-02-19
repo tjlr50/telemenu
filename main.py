@@ -56,7 +56,7 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
 
-def format_date(value, format="%B %d"):
+def format_date(value, format="%B %d, %Y"):
     return value.strftime(format)
 
 
@@ -144,6 +144,11 @@ def orders():
                            order.restaurant.menus if menu._id == order.menu_id]
         restaurant_menu = restaurant_menu[0] if restaurant_menu else None
         order.menu = restaurant_menu
+        order.can_make_opinion = True
+        for opinion in restaurant_menu.opinions:
+            print(opinion, opinion.author.email)
+            if opinion.author.email == session['user']:
+                order.can_make_opinion = False
     return render_template('orders/index.html', orders=orders)
 
 
@@ -154,7 +159,7 @@ def order_create(restaurant_id, menu_id):
     menu = [menu for menu in
             restaurant.menus if menu._id == ObjectId(menu_id)]
     menu = menu[0] if menu else None
-    if menu.valid_date >= datetime.datetime.now():
+    if menu.valid_date.date() < datetime.datetime.now().date():
         menu = None
     if request.method == "GET":
         return render_template('orders/create.html', menu=menu)
@@ -316,13 +321,17 @@ def menus_calificate(restaurant_id, menu_id):
             restaurant.menus if menu._id == ObjectId(menu_id)]
     menu = menu[0] if menu else None
     print(type(menu.valid_date), menu.valid_date, datetime.datetime.now())
-    if menu.valid_date >= datetime.datetime.now():
+    if menu.valid_date.date() < datetime.datetime.now().date():
         menu = None
+
     if request.method == "GET":
         return render_template('menus/calificate.html', menu=menu)
     else:
         try:
             if menu:
+                for opinion in menu.opinions:
+                    if opinion.author.email == session['user']:
+                        return redirect('/')
                 opinion = Opinion(
                     session['user'], request.form['score'], request.form['commentary'])
                 menu.opinions.append(opinion)
