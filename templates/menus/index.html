@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% include "header.html" %}
+{% block title %}Mis Menus{% endblock title %}
+{% block body %}
+{% if menus %}
+<h2 class="mb-2">Tus Menus</h2>
+<a class="mt-2" href="/menus/create">Crear</a>
+<div class="row row-cols-1 row-cols-md-3 g-1">
+    {% for menu in menus %}
+    <div class="col m-0 my-1">
+        <div class="card text-dark">
+            <img src={{menu.photo_url}} alt={{menu.composition}} class="card-img-top" />
+            <div class="card-body">
+                <h5 class="card-title">
+                    Precio:
+                    {{ menu.price }}
+                    <span role="img" aria-label="Dinero">
+                        💸
+                    </span>
+                </h5>
+                <p class="card-text">
+                    {{ menu.composition }}
+                </p>
+                </span>
+                <span class="font-italic text-muted">
+                    <small>
+                        Valido hasta: {{ menu.valid_date|format_date }}
+                    </small>
+                </span>
+                <a type="button" class="btn btn-sm float-start btn-primary" href="/menus/edit/{{menu._id}}"
+                    style="width:48%">
+                    <span class="text-white">
+                        Editar
+                    </span>
+                    <span role="img" aria-label="Carrito">
+
+                        ✏️
+                    </span>
+                </a>
+                <a type="button" class="btn btn-sm float-end btn-danger" href="/menus/delete/{{menu._id}}"
+                    style="width:48%">
+                    <span class="text-white">
+                        Eliminar
+                    </span>
+                    <span role="img" aria-label="Carrito">
+                        🗑️
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="container">
+    <h1>Todavía no tienes menus</h1>
+    <a href="/menus/create">Crea uno</a>
+</div>
+{% endif %}
+{% endblock %}

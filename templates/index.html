@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% include "header.html" %}
 {% block body %}
+{% if not 'restaurant' in session %}
 {% if restaurants %}
 {%for restaurant in restaurants%}
 <h3> {{restaurant.name}}</h3>
@@ -54,5 +55,9 @@
 <div class="text-center">
     <h1>Todavía no hay restaurantes</h1>
 </div>
+{% endif %}
+{% else %}
+<h2>Ordenes de los usuarios: </h2>
+
 {% endif %}
 {% endblock %}

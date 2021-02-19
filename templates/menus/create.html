@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Registro Menú{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h4 class="display-4 m-0 my-4">Registra un menú</h4>
+    <div class="card p-1">
+        <div class="card-body">
+            <form action="/menus/create" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="composicionInput" class="form-label">Composición</label>
+                    <textarea name="composition" maxlength="255" class="form-control" id="composicionInput" required
+                        rows="3"></textarea>
+                </div>
+                <div class="mb-2">
+                    <label for="priceInput" class="form-label">Precio</label>
+                    <input name="price" step="0.1" min="0" max="100" type="number" class="form-control" id="priceInput"
+                        required>
+                </div>
+                <div class="mb-2">
+                    <label for="validDateInput" class="form-label">Valido hasta</label>
+                    <input name="valid_date" type="date" class="form-control" id="validDateInput" required>
+                </div>
+                <div class="mb-3">
+                    <label for="photoSelect" class="form-label">Selecciona una imagen</label>
+                    <input name="photo" class="form-control" type="file" id="photoSelect" required>
+                </div>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" type="submit">Crear Menú</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}
