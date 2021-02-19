@@ -125,7 +125,7 @@ def restaurant_login():
             return render_template('restaurant/login.html', no_restaurant=True)
 
 
-@app.route('/restaurant/logup')
+@app.route('/restaurant/logup', methods=['GET', 'POST'])
 def restaurant_logup():
     if request.method == "GET":
         return render_template('restaurant/logup.html')

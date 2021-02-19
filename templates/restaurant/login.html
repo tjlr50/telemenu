@@ -4,7 +4,7 @@
 <div class="w-100 h-100 text-left p-0">
     <h2 class="display-2 font-weight-bold my-4">¡Administra tu restaurante!</h2>
     <h4 class="display-4 m-0">Con Telemenú</h4>
-    <form action="/login" method="post">
+    <form action="/restaurant/login" method="post">
         {% if no_restaurant %}
         <span class="text-danger">No existe un restaurante registrado con ese correo</span>
         <input name="email" type="email" class="form-control is-invalid mb-2" required placeholder="Correo">

@@ -3,7 +3,7 @@
 {%block body%}
 <div class="w-100 h-100 text-left p-0">
     <h4 class="display-4 m-0 mt-4">Registrate a Telemenú</h4>
-    <form action="/user/logup" method="post">
+    <form action="/restaurant/logup" method="post">
         <input name="restaurant_name" type="text" class="form-control mb-2" required placeholder="Nombre Restaurante">
         {% if email_error %}
         <span class="text-danger">{{email_error}}</span>
