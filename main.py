@@ -154,7 +154,7 @@ def order_create(restaurant_id, menu_id):
     menu = [menu for menu in
             restaurant.menus if menu._id == ObjectId(menu_id)]
     menu = menu[0] if menu else None
-    if menu.valid_date < datetime.datetime.now():
+    if menu.valid_date >= datetime.datetime.now():
         menu = None
     if request.method == "GET":
         return render_template('orders/create.html', menu=menu)
@@ -315,7 +315,8 @@ def menus_calificate(restaurant_id, menu_id):
     menu = [menu for menu in
             restaurant.menus if menu._id == ObjectId(menu_id)]
     menu = menu[0] if menu else None
-    if menu.valid_date < datetime.datetime.now():
+    print(type(menu.valid_date), menu.valid_date, datetime.datetime.now())
+    if menu.valid_date >= datetime.datetime.now():
         menu = None
     if request.method == "GET":
         return render_template('menus/calificate.html', menu=menu)
