@@ -18,6 +18,7 @@ class Menu(EmbeddedMongoModel):
     # Precio
     # Fecha de validez (end timestamp)
     # fotografía
+    _id = fields.ObjectIdField(primary_key=True)
     composition = fields.CharField(required=True, blank=False)
     price = fields.FloatField(required=True)
     valid_date = fields.DateTimeField(required=True)

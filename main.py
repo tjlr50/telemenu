@@ -27,19 +27,30 @@ set SECRET=cambiar
 
 
 """
+
+import datetime
 import os
+
 import bcrypt
-from flask import (Flask, request, session, redirect)
+import pymongo.errors
+from flask import Flask, redirect, request, session
 from flask.templating import render_template
 from pymodm.errors import ValidationError
-import pymongo.errors
-from models import User, Menu, Order, Restaurant
+
+from models import Menu, Order, Restaurant, User
 
 
 SECRET_KEY = os.environ.get('SECRET')
 PROD = bool(os.environ.get('PRODUCTION', False))
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+
+
+def format_date(value, format="%B %d"):
+    return value.strftime(format)
+
+
+app.jinja_env.filters['format_date'] = format_date
 
 
 @app.route('/user/login', methods=['GET', 'POST'])
