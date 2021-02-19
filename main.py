@@ -334,7 +334,9 @@ def menus_calificate(restaurant_id, menu_id):
                         return redirect('/')
                 opinion = Opinion(
                     session['user'], request.form['score'], request.form['commentary'])
-                menu.opinions.append(opinion)
+                new_opinions = menu.opinions.copy()
+                new_opinions.append(opinion)
+                menu.opinions = new_opinions
                 restaurant.save()
             else:
                 return render_template('menus/calificate.html', menu=None)
