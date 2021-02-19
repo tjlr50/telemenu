@@ -138,7 +138,7 @@ def logout():
 @user_logged_in
 def orders():
     orders = list(Order.objects.get_queryset().order_by(
-        [('created_at', pymongo.DESCENDING)]).raw({'user': session['user']}))
+        [('created_at', pymongo.ASCENDING)]).raw({'user': session['user']}))
     for order in orders:
         restaurant_menu = [menu for menu in
                            order.restaurant.menus if menu._id == order.menu_id]

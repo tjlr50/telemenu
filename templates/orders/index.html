@@ -4,7 +4,7 @@
 {% block body %}
 {% if orders %}
 {% for order in orders %}
-<div class="card w-50">
+<div class="card mb-2 w-50">
     <div class="card-body">
         <h5 class="card-title">Orden del día {{ order.created_date|format_date }}</h5>
         <p class="card-text">{{order.menu.composition}}.</p>
