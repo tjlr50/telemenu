@@ -31,8 +31,8 @@ class Menu(EmbeddedMongoModel):
     composition = fields.CharField(required=True, blank=False)
     price = fields.FloatField(required=True)
     valid_date = fields.DateTimeField(required=True)
-    opinions = fields.EmbeddedDocumentListField(Opinion, default=[])
     photo_url = fields.CharField(required=True, blank=False)
+    opinions = fields.EmbeddedDocumentListField(Opinion, default=[])
 
 
 class Restaurant(MongoModel):
