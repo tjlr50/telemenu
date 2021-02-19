@@ -5,6 +5,7 @@
     <h4 class="display-4 m-0 my-4">Califica un menú</h4>
     <div class="card p-1">
         <div class="card-body">
+            {% if menu %}
             <form method="post">
                 <div class="mb-2">
                     <label for="scoreInput" class="form-label">Del 1 al 10 ¿qué tanto te gusto el menú?</label>
@@ -29,6 +30,9 @@
                     <button class="btn btn-success" type="submit">Calificar</button>
                 </div>
             </form>
+            {% else %}
+            <h3 class="text-danger">El Menú ya no existe o no te pertenece</h3>
+            {% endif %}
         </div>
     </div>
 </div>
