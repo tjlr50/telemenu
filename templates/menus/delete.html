@@ -6,7 +6,7 @@
     <div class="card p-1">
         <div class="card-body">
             {% if menu %}
-            <form action="/menus/delete/{{menu._id}}" method="post" enctype="multipart/form-data">
+            <form action="/menus/delete/{{menu._id}}" method="post">
                 <h4>¿Estas seguro que deseas eliminar el menú con esta composicion?</h4>
                 {% if error %}
                 <span class="text-danger">Ocurrió un error tratando de eliminar el menú</span>

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Calificación Menú{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h4 class="display-4 m-0 my-4">Califica un menú</h4>
+    <div class="card p-1">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                <div class="mb-2">
+                    <label for="scoreInput" class="form-label">Del 1 al 10 ¿qué tanto te gusto el menú?</label>
+                    <input name="score" step="1" min="0" max="10" type="number" class="form-control" id="scoreInput"
+                        required>
+                </div>
+                {% if error %}
+                <span class="text-danger">Ocurrió un error tratando de calificar el menú</span>
+                <div class="mb-3">
+                    <label for="commentaryInput" class="form-label">Comentario</label>
+                    <textarea name="commentary" maxlength="255" class="form-control is-invalid" id="commentaryInput"
+                        required rows="3"></textarea>
+                </div>
+                {% else %}
+                <div class="mb-3">
+                    <label for="commentaryInput" class="form-label">Comentario</label>
+                    <textarea name="composition" maxlength="255" class="form-control" id="commentaryInput" required
+                        rows="3"></textarea>
+                </div>
+                {% endif %}
+                <div class="d-grid gap-2">
+                    <button class="btn btn-success" type="submit">Calificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% include "header.html" %}
+{% block title %}Mis Ordenes{% endblock title %}
+{% block body %}
+{% if orders %}
+{% for order in orders %}
+<div class="card w-50">
+    <div class="card-body">
+        <h5 class="card-title">Orden del día {{ order.created_date|format_date }}</h5>
+        <p class="card-text">{{order.menu.composition}}.</p>
+        <p class="text-italic">Estado: {{order.state}}.</p>
+        <a href="/menus/calificate/{{order.restaurant.email}}/{{order.menu._id}}" class="btn btn-success">Calificar</a>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="container text-cente">
+    <h2 class="mb-2">Todavía no tienes ordenes</h2>
+    <a class="mt-2" href="/">Ver Menus</a>
+</div>
+{% endif %}
+{% endblock %}

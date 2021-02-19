@@ -27,11 +27,18 @@
                     </span>
                     <span class="font-italic text-muted">
                         <small>
+                            Puntaje: {{menu|calculate_menu_score}}
+                        </small>
+                    </span>
+                    <br>
+                    <span class="font-italic text-muted">
+                        <small>
                             Valido hasta: {{ menu.valid_date|format_date }}
                         </small>
                     </span>
                     {% if 'user' in session %}
-                    <a type="button" class="btn btn-sm w-50 mx-auto my-2 btn-info" href="/orders/create/{{menu._id}}">
+                    <a type="button" class="btn btn-sm w-50 mx-auto my-2 btn-info"
+                        href="/orders/create/{{restaurant.email}}/{{menu._id}}">
                         <span class="text-white">
                             Ordenar
                         </span>
@@ -58,6 +65,25 @@
 {% endif %}
 {% else %}
 <h2>Ordenes de los usuarios: </h2>
-
+{% if orders %}
+{% for order in orders %}
+<div class="card w-50">
+    <div class="card-body">
+        <h5 class="card-title">Orden del día {{ order.created_date|format_date }}</h5>
+        <p class="card-text">Ordenado por: {{order.user.email}}.</p>
+        <p class="text-italic">Estado: {{order.state}}.</p>
+        {% if not order.state == "Entregado" %}
+        <form action="/orders/setdone/{{order._id}}" method="post">
+            <button type="submit" class="btn btn-primary">Entregar</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="container text-cente">
+    <h2 class="mb-2">Todavía no te han solicitado menus.</h2>
+</div>
+{% endif %}
 {% endif %}
 {% endblock %}

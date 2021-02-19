@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Ordenando Menú{% endblock title %}
+{%block body%}
+<div class="w-100 h-100 text-left p-0">
+    <h4 class="display-4 m-0 my-4">Ordenando menú</h4>
+    <div class="card">
+        <div class="card-body">
+            {% if menu %}
+            {% if error %}
+            <span class="text-danger">Ocurrió un error tratando de ordenar el menú</span>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-8 mx-auto my-1">
+                    <div class="card text-dark">
+                        <img src={{menu.photo_url}} alt={{menu.composition}} class="card-img-top" />
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                Precio:
+                                {{ menu.price }}
+                                <span role="img" aria-label="Dinero">
+                                    💸
+                                </span>
+                            </h5>
+                            <p class="card-text">
+                                {{ menu.composition }}
+                            </p>
+                            </span>
+                            <span class="font-italic text-muted">
+                                <small>
+                                    Valido hasta: {{ menu.valid_date|format_date }}
+                                </small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form method="post">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-info" type="submit">Confirmar</button>
+                </div>
+            </form>
+            {% else %}
+            <h3 class="text-danger">El Menú que deseas ordenar ya no existe o no es valido.</h3>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{%endblock%}

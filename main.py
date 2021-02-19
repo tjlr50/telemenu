@@ -27,7 +27,7 @@ set SECRET=cambiar
 
 """
 
-from models import Menu, Order, Restaurant, User
+from models import Menu, Opinion, Order, Restaurant, User
 import datetime
 import functools
 import os
@@ -36,6 +36,7 @@ import bcrypt
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
+import pymongo
 import pymongo.errors
 from bson.objectid import ObjectId
 from flask import Flask, redirect, request, session
@@ -60,6 +61,16 @@ def format_date(value, format="%B %d"):
 
 
 app.jinja_env.filters['format_date'] = format_date
+
+
+def calculate_menu_score(menu: Menu) -> float:
+    c = 0
+    for opinion in menu.opinions:
+        c += opinion.score
+    return c/(len(menu.opinions) if len(menu.opinions) > 0 else 1)
+
+
+app.jinja_env.filters['calculate_menu_score'] = calculate_menu_score
 
 
 def user_logged_in(func):
@@ -124,18 +135,56 @@ def logout():
 
 
 @app.route('/orders')
+@user_logged_in
 def orders():
-    pass  # -> noop
+    orders = list(Order.objects.get_queryset().order_by(
+        [('created_at', pymongo.DESCENDING)]).raw({'user': session['user']}))
+    for order in orders:
+        restaurant_menu = [menu for menu in
+                           order.restaurant.menus if menu._id == order.menu_id]
+        restaurant_menu = restaurant_menu[0] if restaurant_menu else None
+        order.menu = restaurant_menu
+    return render_template('orders/index.html', orders=orders)
 
 
-@app.route('/orders/<id>')
-def order():
-    pass  # -> noop
+@app.route('/orders/create/<restaurant_id>/<menu_id>', methods=['GET', 'POST'])
+@user_logged_in
+def order_create(restaurant_id, menu_id):
+    restaurant = Restaurant.objects.get({'_id': restaurant_id})
+    menu = [menu for menu in
+            restaurant.menus if menu._id == ObjectId(menu_id)]
+    menu = menu[0] if menu else None
+    if menu.valid_date >= datetime.datetime.now():
+        menu = None
+    if request.method == "GET":
+        return render_template('orders/create.html', menu=menu)
+    else:
+        try:
+            if menu:
+                Order(ObjectId(), datetime.datetime.now(), restaurant.email,
+                      session['user'], menu._id, "Preparación").save()
+            else:
+                return render_template('orders/create.html', menu=None)
+        except Exception as e:
+            print(e)
+            return render_template('orders/create.html', menu=menu, error=True)
+        return redirect('/orders')
 
 
-@app.route('/orders/create')
-def order_create():
-    pass  # -> noo
+@app.route('/orders/setdone/<order_id>', methods=["GET", "POST"])
+@restaurant_logged_in
+def order_setdone(order_id):
+    if request.method == "GET":
+        return redirect('/')
+    else:
+        orders = list(Order.objects.get_queryset().raw(
+            {'restaurant': session['restaurant']}))
+        for order in orders:
+            if order._id == ObjectId(order_id):
+                if order.restaurant.email == session['restaurant']:
+                    order.state = "Entregado"
+                    order.save()
+        return redirect('/')
 
 
 @app.route('/restaurant/login', methods=['GET', 'POST'])
@@ -212,7 +261,6 @@ def menus_edit(id):
     menu_and_idx = [(menu, idx) for idx, menu in enumerate(
         restaurant.menus) if menu._id == ObjectId(id)]
     menu = menu_and_idx[0][0] if menu_and_idx else None
-    idx = menu_and_idx[0][1] if menu_and_idx else None
     if request.method == "GET":
         return render_template('menus/edit.html', menu=menu)
     else:
@@ -241,10 +289,9 @@ def menus_edit(id):
 @restaurant_logged_in
 def menus_delete(id):
     restaurant = Restaurant.objects.get({'_id': session['restaurant']})
-    menu_and_idx = [(menu, idx) for idx, menu in enumerate(
-        restaurant.menus) if menu._id == ObjectId(id)]
-    menu = menu_and_idx[0][0] if menu_and_idx else None
-    idx = menu_and_idx[0][1] if menu_and_idx else None
+    menu = [menu for menu in
+            restaurant.menus if menu._id == ObjectId(id)]
+    menu = menu[0] if menu else None
     if request.method == "GET":
         return render_template('menus/delete.html', menu=menu)
     else:
@@ -260,6 +307,32 @@ def menus_delete(id):
         return redirect('/menus')
 
 
+@app.route('/menus/calificate/<restaurant_id>/<menu_id>', methods=['GET', 'POST'])
+@user_logged_in
+def menus_calificate(restaurant_id, menu_id):
+    restaurant = Restaurant.objects.get({'_id': restaurant_id})
+    menu = [menu for menu in
+            restaurant.menus if menu._id == ObjectId(menu_id)]
+    menu = menu[0] if menu else None
+    if menu.valid_date >= datetime.datetime.now():
+        menu = None
+    if request.method == "GET":
+        return render_template('menus/calificate.html', menu=menu)
+    else:
+        try:
+            if menu:
+                opinion = Opinion(
+                    session['user'], request.form['score'], request.form['commentary'])
+                menu.opinions.append(opinion)
+                restaurant.save()
+            else:
+                return render_template('menus/calificate.html', menu=None)
+        except Exception as e:
+            print(e)
+            return render_template('menus/calificate.html', menu=menu, error=True)
+        return redirect('/')
+
+
 @ app.route('/')
 def index():
     orders = []
@@ -268,9 +341,8 @@ def index():
             {'_id': session['restaurant']}).menus
         menus_ids = [menu._id for menu in menus]
         for id in menus_ids:
-            sub_orders = Order.objects.get_queryset().raw({'menu': id})
+            sub_orders = Order.objects.get_queryset().raw({'menu_id': id})
             orders.extend(sub_orders)
-    print(orders)
     return render_template('index.html', restaurants=Restaurant.objects.all(), orders=orders)
 
 
