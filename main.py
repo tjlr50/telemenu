@@ -244,7 +244,8 @@ def menus_create():
                 request.form['valid_date'], '%Y-%m-%d')
             photo = request.files['photo']
             photo_url = cloudinary.uploader.upload_image(photo).build_url()
-            menu = Menu(ObjectId(), composition, price, valid_date, photo_url)
+            menu = Menu(ObjectId(), composition, price,
+                        valid_date, [], photo_url)
             restaurant.menus.append(menu)
             restaurant.save()
         except Exception as e:
