@@ -1,0 +1,19 @@
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand">Navbar</a>
+            <div class="d-flex">
+                {% if 'user' in session %}
+                <a class="me-2" href="/orders">Mis Ordenes</a>
+                <a href="/logout">Cerrar Sesión</a>
+                {% elif 'restaurant' in session %}
+                <a class="me-2" href="/orders">Mis Menus</a>
+                <a href="/logout">Cerrar Sesión</a>
+                {% else %}
+                <a class="me-2" href="/user/login">Iniciar Sesión</a>
+                <a href="/user/logup">Registrarse</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>

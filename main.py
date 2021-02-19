@@ -78,6 +78,13 @@ def user_logup():
     return redirect('/user/login')
 
 
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    session.pop('restaurant', None)
+    return redirect('/')
+
+
 @app.route('/orders')
 def orders():
     pass  # -> noop
